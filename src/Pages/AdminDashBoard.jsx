@@ -1,35 +1,139 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+// import './AdminDashBoard.css';
+// import AnnouncementForm from './AnnouncementForm';
+// export default function AdminDashBoard() {
+//   const [form, setForm] = useState(false);
+
+//   const post_form = () => {
+//     setForm(true);
+//   };
+//   const close_form = () => {
+//     setForm(false);
+//   };
+
+//   return (
+//     <>
+//               <div className="admin-header"> 
+//           <ul>
+//             <li onClick={post_form}>
+//                 Post Announcements!
+//             </li>
+//           </ul>
+//         </div>
+//       {/* {form && <div className="post-modal-overlay"></div>} */}
+//       {form && 
+//       (<>
+//         <div className="announcement-modal-overlay"></div>
+//         <AnnouncementForm onClose={close_form} />
+//         </>
+//       )
+//       }
+            
+//     </>
+//   );
+// }
+
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../supabaseClient';
 import './AdminDashBoard.css';
 import AnnouncementForm from './AnnouncementForm';
+
 export default function AdminDashBoard() {
   const [form, setForm] = useState(false);
+  const [announcements, setAnnouncements] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const post_form = () => {
-    setForm(true);
+  // Fetch user's announcements
+  const fetchAnnouncements = async () => {
+    try {
+      setLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) throw new Error('User not authenticated');
+      
+      const { data, error } = await supabase
+        .from('announcements')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      
+      setAnnouncements(data || []);
+    } catch (err) {
+      console.error('Fetch error:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, []);
+
+  const post_form = () => setForm(true);
   const close_form = () => {
     setForm(false);
+    fetchAnnouncements(); // Refresh list after form closes
   };
 
   return (
-    <>
-              <div className="admin-header"> 
-          <ul>
-            <li onClick={post_form}>
-                Post Announcements!
-            </li>
-          </ul>
-        </div>
-      {/* {form && <div className="post-modal-overlay"></div>} */}
-      {form && 
-      (<>
-        <div className="announcement-modal-overlay"></div>
-        <AnnouncementForm onClose={close_form} />
+    <div className="admin-dashboard-container">
+      <div className="admin-header">
+        <ul>
+          <li onClick={post_form}>
+            Post Announcements!
+          </li>
+        </ul>
+      </div>
+
+      {/* Announcements List */}
+      <div className="announcements-list">
+        <h2>Your Announcements</h2>
+        
+        {loading ? (
+          <div className="loading-spinner">Loading...</div>
+        ) : error ? (
+          <div className="error-message">Error: {error}</div>
+        ) : announcements.length === 0 ? (
+          <p>No announcements yet. Create your first one!</p>
+        ) : (
+          announcements.map(announcement => (
+            <div key={announcement.id} className="announcement-card">
+              <h3>{announcement.title}</h3>
+              <div className="announcement-meta">
+                <span className="announcement-type">{announcement.type}</span>
+                <span className="announcement-date">
+                  {new Date(announcement.created_at).toLocaleDateString()}
+                </span>
+              </div>
+              <p>{announcement.description}</p>
+              
+              {announcement.last_date && (
+                <div className="announcement-deadline">
+                  Deadline: {new Date(announcement.last_date).toLocaleDateString()}
+                </div>
+              )}
+              
+              {announcement.video_url && (
+                <a href={announcement.video_url} target="_blank" rel="noopener noreferrer">
+                  View Video
+                </a>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Announcement Form Modal */}
+      {form && (
+        <>
+          <div className="announcement-modal-overlay" onClick={close_form}></div>
+          <AnnouncementForm onClose={close_form} />
         </>
-      )
-      }
-            
-    </>
+      )}
+    </div>
   );
 }
-
