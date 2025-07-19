@@ -7,7 +7,7 @@ import Home from './Home';
 const Login = () => {
   const [showModal, setShowModal] = useState(true);
   const [role, setRole] = useState('student');
-  const [mode, setMode] = useState('login'); // 'login' or 'register'
+  const [mode, setMode] = useState('login'); 
   const location = useLocation();
 
   useEffect(() => {

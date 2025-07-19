@@ -76,4 +76,31 @@
   background: #6366F1;
   transform: scale(1.2);
   box-shadow: 0 2px 8px #6366F155;
+}
+
+.carousel-image-wrapper {
+  position: relative;
+  width: 860px;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(30, 41, 59, 0.55);
+  color: #fff;
+  padding: 18px 48px;
+  border-radius: 12px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  box-shadow: 0 2px 12px rgba(30,41,59,0.18);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  pointer-events: none;
+  user-select: none;
 } 

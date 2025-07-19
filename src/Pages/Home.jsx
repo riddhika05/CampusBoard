@@ -7,6 +7,12 @@ const images = [
   '/src/assets/webinar.jpg',
 ];
 
+const overlays = [
+  'Courses',
+  'Seminars',
+  'Webinars',
+];
+
 const Home = () => {
   const [current, setCurrent] = useState(0);
 
@@ -22,11 +28,14 @@ const Home = () => {
 
   return (
     <div className="carousel-container">
-      <img
-        src={images[current]}
-        alt={`slide-${current}`}
-        className="carousel-image"
-      />
+      <div className="carousel-image-wrapper">
+        <img
+          src={images[current]}
+          alt={`slide-${current}`}
+          className="carousel-image"
+        />
+        <div className="carousel-overlay">{overlays[current]}</div>
+      </div>
       <button onClick={goToPrev} className="carousel-btn prev">&lt;</button>
       <button onClick={goToNext} className="carousel-btn next">&gt;</button>
       <div className="carousel-dots">
