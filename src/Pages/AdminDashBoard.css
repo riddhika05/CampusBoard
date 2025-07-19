@@ -8,6 +8,122 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  z-index: 100;
+}
+
+.post-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(30, 41, 59, 0.25);
+  backdrop-filter: blur(3px);
+  z-index: 9;
+}
+
+.announcement-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(30, 41, 59, 0.25);
+  backdrop-filter: blur(3px);
+  z-index: 9;
+}
+
+.announcement-form {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(60,60,120,0.10);
+  padding: 2rem 2.5rem 2.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 480px;
+  margin: 0 auto;
+  z-index: 100;
+}
+
+.announcement-form label {
+  font-weight: 600;
+  color: #3b3b5c;
+  margin-bottom: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.announcement-form input[type="text"],
+.announcement-form input[type="date"],
+.announcement-form input[type="url"],
+.announcement-form textarea,
+.announcement-form select {
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  border: 1.5px solid #e0e7ff;
+  font-size: 1.08rem;
+  background: #f5f7fa;
+  color: #222;
+  margin-bottom: 0.2rem;
+  transition: border 0.2s;
+}
+.announcement-form input[type="text"]:focus,
+.announcement-form input[type="date"]:focus,
+.announcement-form input[type="url"]:focus,
+.announcement-form textarea:focus,
+.announcement-form select:focus {
+  border: 1.5px solid #6366F1;
+  outline: none;
+}
+.announcement-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+.announcement-form input[type="file"] {
+  margin-top: 0.2rem;
+  background: #f5f7fa;
+  border-radius: 6px;
+  font-size: 1rem;
+  padding: 0.3rem 0.2rem;
+}
+.announcement-form button[type="submit"] {
+  background: linear-gradient(90deg, #6366F1, #06B6D4);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(60,60,120,0.08);
+  transition: background 0.2s, transform 0.15s;
+}
+.announcement-form button[type="submit"]:hover {
+  background: linear-gradient(90deg, #06B6D4, #6366F1);
+  transform: scale(1.04);
+}
+
+.training-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #b0b3c6;
+  transition: color 0.2s, transform 0.15s;
+  padding: 0 8px;
+  line-height: 1;
+  z-index: 11;
+}
+.training-modal-close:hover {
+  color: #6366F1;
+  transform: scale(1.18) rotate(90deg);
 }
 
 .Post button {
