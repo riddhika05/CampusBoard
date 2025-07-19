@@ -66,4 +66,17 @@
   transform: scale(1.06);
   box-shadow: 0 4px 16px rgba(60, 60, 120, 0.12);
 }
-  
+/* Add these to Header.css */
+.user-role {
+  background: #e0e7ff;
+  color: #6366F1;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+}
+
+.header-list button.lgn-btn {
+  cursor: pointer;
+}
