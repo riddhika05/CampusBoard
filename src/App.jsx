@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import Login from './Pages/Login.jsx'
 import Home from './Pages/Home.jsx'
+import AdminDashBoard from './Pages/AdminDashBoard.jsx'
+import StudentDashBoard from './Pages/StudentDashBoard.jsx'
 function App() {
  
 
@@ -14,6 +16,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path='/admin' element={<AdminDashBoard/>}/>
+        <Route path='/student' element={<StudentDashBoard/>}/>
         {/* add more routes */}
       </Routes>
     </Router>   

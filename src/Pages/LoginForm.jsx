@@ -2,13 +2,13 @@
 import React, { useState } from 'react';
 import './LoginForm.css';
 import { logIn, logOut } from '../Services/Auth'; // adjust path if needed
-
+import { useNavigate } from 'react-router-dom';
 const LoginForm = ({ role, onSwitchToSignUp }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
-  
+  const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -30,7 +30,13 @@ const LoginForm = ({ role, onSwitchToSignUp }) => {
       await logOut(); // optional: logout immediately
     } else {
       // ✅ Login successful
-      alert(`${role} logged in successfully!`);
+   
+     
+      if (userRole === 'admin') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/student', { replace: true });
+      }
       window.location.reload();
       // You can redirect here or update parent component
     }

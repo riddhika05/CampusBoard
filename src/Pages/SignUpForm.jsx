@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import './SignUpForm.css';
 import { signUp } from '../Services/Auth'; // adjust the path if needed
-
+import { useNavigate } from 'react-router-dom';
 const SignUpForm = ({ role, onSwitchToLogin }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -11,7 +11,7 @@ const SignUpForm = ({ role, onSwitchToLogin }) => {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const handleSignUp = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -30,6 +30,11 @@ const SignUpForm = ({ role, onSwitchToLogin }) => {
     } else {
       setSuccessMsg(`Account created! Please verify your email.`);
       // optionally clear form
+      if (role === 'admin') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/student', { replace: true });
+      }
       window.location.reload();
       setName('');
       setEmail('');
