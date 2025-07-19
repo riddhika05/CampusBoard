@@ -40,7 +40,9 @@ export const Header = () => {
         {isLoggedIn ? (
           <>
             <li>
-              <span className="user-role">{userRole}</span>
+            <Link to={userRole === 'admin' ? '/admin' : '/student'}>
+            <span className="user-role">{userRole}</span>
+          </Link>
             </li>
             <li>
               <button onClick={handleLogout} className="lgn-btn">
