@@ -7,7 +7,7 @@ import Home from './Home';
 const Login = () => {
   const [showModal, setShowModal] = useState(true);
   const [role, setRole] = useState('student');
-  const [mode, setMode] = useState('login'); 
+  const [mode, setMode] = useState('login'); // 'login' or 'register'
   const location = useLocation();
 
   useEffect(() => {
@@ -45,7 +45,23 @@ const Login = () => {
                 <LoginForm role={role} onSwitchToSignUp={() => setMode('register')} />
               </>
             ) : (
-              <SignUpForm onSwitchToLogin={() => setMode('login')} />
+              <>
+                <div className="role-switch">
+                  <button
+                    className={role === 'student' ? 'role-btn active' : 'role-btn'}
+                    onClick={() => setRole('student')}
+                  >
+                    Student
+                  </button>
+                  <button
+                    className={role === 'admin' ? 'role-btn active' : 'role-btn'}
+                    onClick={() => setRole('admin')}
+                  >
+                    Admin
+                  </button>
+                </div>
+                <SignUpForm role={role} onSwitchToLogin={() => setMode('login')} />
+              </>
             )}
           </div>
         </div>

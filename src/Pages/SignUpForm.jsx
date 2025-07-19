@@ -1,16 +1,16 @@
 import React from 'react';
 import './SignUpForm.css';
 
-const SignUpForm = ({ onSwitchToLogin }) => (
+const SignUpForm = ({ role, onSwitchToLogin }) => (
   <form className="signup-form">
-    <h2>Create Account</h2>
+    <h2>Create {role === 'student' ? 'Student' : 'Admin'} Account</h2>
     <input
       type="text"
-      placeholder="Full Name"
+      placeholder={role === 'student' ? 'Full Name (Student)' : 'Full Name (Admin)'}
     />
     <input
       type="email"
-      placeholder="Email"
+      placeholder={role === 'student' ? 'Student Email' : 'Admin Email'}
     />
     <input
       type="password"
