@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import './AdminDashBoard.css';
 import AnnouncementForm from './AnnouncementForm';
-
+import { Link, useNavigate } from 'react-router-dom';
 export default function AdminDashBoard() {
   const [form, setForm] = useState(false);
   const [editingAnnouncement, setEditingAnnouncement] = useState(null);
@@ -66,10 +66,10 @@ export default function AdminDashBoard() {
 
       // Remove from local state
       setAnnouncements(prev => prev.filter(announcement => announcement.id !== id));
-      alert('Announcement deleted successfully!');
+    
     } catch (err) {
       console.error('Delete error:', err);
-      alert('Failed to delete announcement: ' + err.message);
+     
     }
   };
 
@@ -81,6 +81,11 @@ export default function AdminDashBoard() {
         <ul>
           <li onClick={post_form}>
             Post Announcements!
+          </li>
+          <li >
+            <Link to='/analytics'>
+             See Analytics
+             </Link>
           </li>
         </ul>
       </div>
