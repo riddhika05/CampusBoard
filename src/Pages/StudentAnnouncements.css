@@ -1,0 +1,265 @@
+.student-announcements-container {
+  min-height: 100vh;
+  background: #242424;
+  padding-top: calc(65px + 80px); /* Account for both headers */
+}
+
+.student-announcements-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.student-announcements-content h1 {
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.student-announcements-content h1::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #6366F1, #06B6D4);
+  border-radius: 2px;
+}
+
+/* Announcements Grid */
+.announcements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* Announcement Cards */
+.announcement-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  border-left: 4px solid #6366F1;
+}
+
+.announcement-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.announcement-card h3 {
+  color: #1f2937;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  line-height: 1.3;
+}
+
+.announcement-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.announcement-type {
+  background: linear-gradient(90deg, #6366F1, #06B6D4);
+  color: #fff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.announcement-date {
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  background: #f3f4f6;
+  border-radius: 20px;
+}
+
+.announcement-card p {
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+  font-size: 0.95rem;
+}
+
+.announcement-deadline {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 1rem 0;
+  display: inline-block;
+}
+
+.announcement-duration {
+  background: #e0f2fe;
+  color: #0c4a6e;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0.5rem 0;
+  display: inline-block;
+}
+
+.webinar-link,
+.video-link {
+  color: #6366F1;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border: 2px solid #6366F1;
+  border-radius: 8px;
+  display: inline-block;
+  transition: all 0.3s ease;
+  margin: 0.5rem 0.5rem 0.5rem 0;
+}
+
+.webinar-link:hover,
+.video-link:hover {
+  background: #6366F1;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.apply-btn {
+  background: linear-gradient(90deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.apply-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+}
+
+/* Expired Announcement Styles */
+.announcement-card.expired {
+  opacity: 0.7;
+  border-left-color: #ef4444;
+  background: #fef2f2;
+}
+
+.announcement-card.expired:hover {
+  opacity: 0.8;
+}
+
+.expired-badge {
+  background: #ef4444;
+  color: #fff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: pulse 2s infinite;
+}
+
+.expired-deadline {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.expired-text {
+  font-weight: 600;
+  color: #dc2626;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Loading and Error States */
+.loading-spinner {
+  text-align: center;
+  padding: 3rem;
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+.error-message {
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.no-announcements {
+  text-align: center;
+  color: #ffffff;
+  font-size: 1.1rem;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  margin: 2rem 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .student-announcements-container {
+    padding-top: calc(65px + 120px);
+  }
+  
+  .student-announcements-content {
+    padding: 1rem;
+  }
+  
+  .student-announcements-content h1 {
+    font-size: 2rem;
+  }
+  
+  .announcements-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .announcement-card {
+    padding: 1rem;
+  }
+  
+  .announcement-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .announcement-card h3 {
+    font-size: 1.2rem;
+  }
+} 

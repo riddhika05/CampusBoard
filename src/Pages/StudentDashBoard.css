@@ -1,0 +1,51 @@
+.student-dashboard-container {
+  min-height: 100vh;
+  background: #242424;
+  padding-top: calc(20vh + 80px); /* Account for both headers */
+}
+.student-header
+{
+    top:65px;
+    left: 0;
+    right: 0;
+}
+.student-dashboard-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.student-dashboard-content h1 {
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.student-dashboard-content p {
+  color: #ffffff;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .student-dashboard-container {
+    padding-top: calc(20vh + 120px);
+  }
+  
+  .student-dashboard-content {
+    padding: 1rem;
+  }
+  
+  .student-dashboard-content h1 {
+    font-size: 2rem;
+  }
+  
+  .student-dashboard-content p {
+    font-size: 1rem;
+  }
+} 

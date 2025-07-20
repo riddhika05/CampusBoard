@@ -7,6 +7,8 @@ import Home from './Pages/Home.jsx'
 import AdminDashBoard from './Pages/AdminDashBoard.jsx'
 import StudentDashBoard from './Pages/StudentDashBoard.jsx'
 import Analytics from './Pages/Analytics.jsx'
+import StudentAnnouncements from './Pages/StudentAnnouncements.jsx'
+import StudentApplications from './Pages/StudentApplications.jsx'
 function App() {
  
 
@@ -20,6 +22,9 @@ function App() {
         <Route path='/admin' element={<AdminDashBoard/>}/>
         <Route path='/student' element={<StudentDashBoard/>}/>
         <Route path='/analytics' element={<Analytics/>}/>
+        <Route path='/student/announcements' element={<StudentAnnouncements/>}/>
+        <Route path='/student/applications' element={<StudentApplications/>}/>
+       
         {/* add more routes */}
       </Routes>
     </Router>   
