@@ -11,6 +11,9 @@ export default function StudentAnnouncements() {
   const [user, setUser] = useState(null);
   const [registrations, setRegistrations] = useState([]);
   const [applicationCounts, setApplicationCounts] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedType, setSelectedType] = useState('');
+  const [availableTypes, setAvailableTypes] = useState([]);
 
   // Fetch user session and registrations
   useEffect(() => {
@@ -39,8 +42,10 @@ export default function StudentAnnouncements() {
       
       setAnnouncements(data || []);
       
-      // Fetch application counts for each announcement
+      // Extract unique types from announcements
       if (data && data.length > 0) {
+        const types = [...new Set(data.map(a => a.type))].sort();
+        setAvailableTypes(types);
         await fetchApplicationCounts(data.map(a => a.id));
       }
     } catch (err) {
@@ -133,6 +138,31 @@ export default function StudentAnnouncements() {
         <div className="student-announcements-content">
           <h1>Available Announcements</h1>
           
+          {/* Search and Filter Section */}
+          <div className="search-filter-section">
+            <div className="search-bar">
+              <input
+                type="text"
+                placeholder="Search announcements..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+            </div>
+            <div className="filter-dropdown">
+              <select
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="type-filter"
+              >
+                <option value="">All Types</option>
+                {availableTypes.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          
           {error && <div className="error-message">{error}</div>}
           
           {loading ? (
@@ -142,8 +172,20 @@ export default function StudentAnnouncements() {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             return lastDate >= today;
+          }).filter(announcement => {
+            // Filter by search term
+            const matchesSearch = searchTerm === '' || 
+              announcement.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              announcement.description.toLowerCase().includes(searchTerm.toLowerCase());
+            
+            // Filter by type
+            const matchesType = selectedType === '' || announcement.type === selectedType;
+            
+            return matchesSearch && matchesType;
           }).length === 0 ? (
-            <p className="no-announcements">No active announcements available at the moment.</p>
+            <p className="no-announcements">
+              {searchTerm || selectedType ? 'No announcements match your search criteria.' : 'No active announcements available at the moment.'}
+            </p>
           ) : (
             <div className="announcements-grid">
               {announcements
@@ -152,6 +194,17 @@ export default function StudentAnnouncements() {
                   const today = new Date();
                   today.setHours(0, 0, 0, 0);
                   return lastDate >= today;
+                })
+                .filter(announcement => {
+                  // Filter by search term
+                  const matchesSearch = searchTerm === '' || 
+                    announcement.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    announcement.description.toLowerCase().includes(searchTerm.toLowerCase());
+                  
+                  // Filter by type
+                  const matchesType = selectedType === '' || announcement.type === selectedType;
+                  
+                  return matchesSearch && matchesType;
                 })
                 .map(announcement => {
                   const lastDate = new Date(announcement.last_date);
