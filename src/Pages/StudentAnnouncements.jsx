@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import StudentHeader from '../components/StudentHeader';
@@ -7,6 +8,22 @@ export default function StudentAnnouncements() {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [user, setUser] = useState(null);
+  const [registrations, setRegistrations] = useState([]);
+  const [applicationCounts, setApplicationCounts] = useState({});
+
+  // Fetch user session and registrations
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      if (user) {
+        fetchRegistrations(user.id);
+      }
+    };
+    
+    fetchUser();
+  }, []);
 
   // Fetch all announcements
   const fetchAnnouncements = async () => {
@@ -21,11 +38,86 @@ export default function StudentAnnouncements() {
       if (error) throw error;
       
       setAnnouncements(data || []);
+      
+      // Fetch application counts for each announcement
+      if (data && data.length > 0) {
+        await fetchApplicationCounts(data.map(a => a.id));
+      }
     } catch (err) {
       console.error('Fetch error:', err);
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Fetch application counts for announcements
+  const fetchApplicationCounts = async (announcementIds) => {
+    try {
+      const { data, error } = await supabase
+        .from('registrations')
+        .select('announcement_id')
+        .in('announcement_id', announcementIds);
+
+      if (error) throw error;
+
+      // Count applications per announcement
+      const counts = {};
+      data.forEach(registration => {
+        counts[registration.announcement_id] = (counts[registration.announcement_id] || 0) + 1;
+      });
+
+      setApplicationCounts(counts);
+    } catch (err) {
+      console.error('Application count fetch error:', err);
+    }
+  };
+
+  // Fetch user's registrations
+  const fetchRegistrations = async (userId) => {
+    try {
+      const { data, error } = await supabase
+        .from('registrations')
+        .select('announcement_id')
+        .eq('student_id', userId);
+
+      if (error) throw error;
+      
+      setRegistrations(data.map(r => r.announcement_id));
+    } catch (err) {
+      console.error('Registration fetch error:', err);
+    }
+  };
+
+  // Handle registration
+  const handleApply = async (announcementId) => {
+    if (!user) {
+      setError('Please log in to apply');
+      return;
+    }
+
+    try {
+      // Check if already registered
+      if (registrations.includes(announcementId)) {
+        setError('You have already applied to this announcement');
+        return;
+      }
+
+      const { error } = await supabase
+        .from('registrations')
+        .insert([{
+          student_id: user.id,
+          announcement_id: announcementId,
+          status: 'pending'
+        }]);
+
+      if (error) throw error;
+
+      // Refresh registrations
+      await fetchRegistrations(user.id);
+    } catch (err) {
+      console.error('Application error:', err);
+      setError(err.message);
     }
   };
 
@@ -41,10 +133,10 @@ export default function StudentAnnouncements() {
         <div className="student-announcements-content">
           <h1>Available Announcements</h1>
           
+          {error && <div className="error-message">{error}</div>}
+          
           {loading ? (
             <div className="loading-spinner">Loading announcements...</div>
-          ) : error ? (
-            <div className="error-message">Error: {error}</div>
           ) : announcements.filter(announcement => {
             const lastDate = new Date(announcement.last_date);
             const today = new Date();
@@ -59,63 +151,71 @@ export default function StudentAnnouncements() {
                   const lastDate = new Date(announcement.last_date);
                   const today = new Date();
                   today.setHours(0, 0, 0, 0);
-                  return lastDate >= today; // Only show non-expired announcements
+                  return lastDate >= today;
                 })
                 .map(announcement => {
                   const lastDate = new Date(announcement.last_date);
                   const today = new Date();
                   today.setHours(0, 0, 0, 0);
                   const isExpired = lastDate < today;
+                  const isRegistered = registrations.includes(announcement.id);
                   
                   return (
                     <div key={announcement.id} className={`announcement-card ${isExpired ? 'expired' : ''}`}>
-                    <h3>{announcement.title}</h3>
-                    <div className="announcement-meta">
-                      <span className="announcement-type">{announcement.type}</span>
-                      <span className="announcement-date">
-                        {new Date(announcement.created_at).toLocaleDateString()}
-                      </span>
-                      {isExpired && (
-                        <span className="expired-badge">EXPIRED</span>
+                      <h3>{announcement.title}</h3>
+                      <div className="announcement-meta">
+                        <span className="announcement-type">{announcement.type}</span>
+                        <span className="announcement-date">
+                          {new Date(announcement.created_at).toLocaleDateString()}
+                        </span>
+                        <span className="application-count">
+                          {applicationCounts[announcement.id] || 0} Applications
+                        </span>
+                        {isExpired && (
+                          <span className="expired-badge">EXPIRED</span>
+                        )}
+                      </div>
+                      <p>{announcement.description}</p>
+                      
+                      {announcement.last_date && (
+                        <div className={`announcement-deadline ${isExpired ? 'expired-deadline' : ''}`}>
+                          Deadline: {new Date(announcement.last_date).toLocaleDateString()}
+                          {isExpired && <span className="expired-text"> (Expired)</span>}
+                        </div>
                       )}
+                      
+                      {announcement.duration && (
+                        <div className="announcement-duration">
+                          Duration: {announcement.duration}
+                        </div>
+                      )}
+                      
+                      {announcement.webinar_link && (
+                        <a href={announcement.webinar_link} target="_blank" rel="noopener noreferrer" className="webinar-link">
+                          Join Webinar
+                        </a>
+                      )}
+                      
+                      {announcement.video_url && (
+                        <a href={announcement.video_url} target="_blank" rel="noopener noreferrer" className="video-link">
+                          Watch Video
+                        </a>
+                      )}
+                      
+                      <button 
+                        className={`apply-btn ${isRegistered ? 'applied' : ''}`}
+                        onClick={() => handleApply(announcement.id)}
+                        disabled={isExpired || isRegistered}
+                      >
+                        {isRegistered ? 'Applied ✓' : 'Apply Now'}
+                      </button>
                     </div>
-                    <p>{announcement.description}</p>
-                    
-                    {announcement.last_date && (
-                      <div className={`announcement-deadline ${isExpired ? 'expired-deadline' : ''}`}>
-                        Deadline: {new Date(announcement.last_date).toLocaleDateString()}
-                        {isExpired && <span className="expired-text"> (Expired)</span>}
-                      </div>
-                    )}
-                    
-                    {announcement.duration && (
-                      <div className="announcement-duration">
-                        Duration: {announcement.duration}
-                      </div>
-                    )}
-                    
-                    {announcement.webinar_link && (
-                      <a href={announcement.webinar_link} target="_blank" rel="noopener noreferrer" className="webinar-link">
-                        Join Webinar
-                      </a>
-                    )}
-                    
-                    {announcement.video_url && (
-                      <a href={announcement.video_url} target="_blank" rel="noopener noreferrer" className="video-link">
-                        Watch Video
-                      </a>
-                    )}
-                    
-                    <button className="apply-btn">
-                      Apply Now
-                    </button>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           )}
         </div>
       </div>
     </>
   );
-} 
+}

@@ -89,6 +89,17 @@
   border-radius: 20px;
 }
 
+.application-count {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  background: linear-gradient(90deg, #10b981, #059669);
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .announcement-card p {
   color: #4b5563;
   line-height: 1.6;

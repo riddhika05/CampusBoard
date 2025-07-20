@@ -9,6 +9,7 @@ export default function AdminDashBoard() {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [applicationCounts, setApplicationCounts] = useState({});
 
   // Fetch user's announcements
   const fetchAnnouncements = async () => {
@@ -27,11 +28,38 @@ export default function AdminDashBoard() {
       if (error) throw error;
       
       setAnnouncements(data || []);
+      
+      // Fetch application counts for each announcement
+      if (data && data.length > 0) {
+        await fetchApplicationCounts(data.map(a => a.id));
+      }
     } catch (err) {
       console.error('Fetch error:', err);
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Fetch application counts for announcements
+  const fetchApplicationCounts = async (announcementIds) => {
+    try {
+      const { data, error } = await supabase
+        .from('registrations')
+        .select('announcement_id')
+        .in('announcement_id', announcementIds);
+
+      if (error) throw error;
+
+      // Count applications per announcement
+      const counts = {};
+      data.forEach(registration => {
+        counts[registration.announcement_id] = (counts[registration.announcement_id] || 0) + 1;
+      });
+
+      setApplicationCounts(counts);
+    } catch (err) {
+      console.error('Application count fetch error:', err);
     }
   };
 
@@ -114,6 +142,9 @@ export default function AdminDashBoard() {
                   <span className="announcement-type">{announcement.type}</span>
                   <span className="announcement-date">
                     {new Date(announcement.created_at).toLocaleDateString()}
+                  </span>
+                  <span className="application-count">
+                    {applicationCounts[announcement.id] || 0} Applications
                   </span>
                   {isExpired && (
                     <span className="expired-badge">EXPIRED</span>
