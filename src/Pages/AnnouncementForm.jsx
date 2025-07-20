@@ -11,6 +11,7 @@ export default function AnnouncementForm({ onClose, editingAnnouncement }) {
     lastDate: editingAnnouncement?.last_date ? editingAnnouncement.last_date.split('T')[0] : '',
     duration: editingAnnouncement?.duration || '',
     webinarLink: editingAnnouncement?.webinar_link || '',
+    email: editingAnnouncement?.email || '',
     video: null
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -81,6 +82,7 @@ export default function AnnouncementForm({ onClose, editingAnnouncement }) {
              last_date: formData.lastDate || null,
              duration: formData.duration,
              webinar_link: formData.postType === 'webinar' ? formData.webinarLink : null,
+             email: formData.email,
              video_url: videoUrl || editingAnnouncement.video_url
            })
            .eq('id', editingAnnouncement.id)
@@ -97,6 +99,7 @@ export default function AnnouncementForm({ onClose, editingAnnouncement }) {
              last_date: formData.lastDate || null,
              duration: formData.duration,
              webinar_link: formData.postType === 'webinar' ? formData.webinarLink : null,
+             email: formData.email,
              video_url: videoUrl,
              status: 'published'
            })
@@ -205,6 +208,21 @@ export default function AnnouncementForm({ onClose, editingAnnouncement }) {
             required 
             disabled={isLoading}
             placeholder="e.g., 2 weeks, 3 months"
+          />
+        </label>
+      </div>
+
+      <div className="form-group">
+        <label>
+          Contact Email*:
+          <input 
+            type="email" 
+            name="email"
+            value={formData.email} 
+            onChange={handleChange} 
+            required 
+            disabled={isLoading}
+            placeholder="your.email@example.com"
           />
         </label>
       </div>

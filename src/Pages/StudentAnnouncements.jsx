@@ -126,6 +126,26 @@ export default function StudentAnnouncements() {
     }
   };
 
+  // Handle contact
+  const handleContact = (announcement) => {
+    const creatorEmail = announcement.email;
+    console.log('Creator Email:', creatorEmail);
+    console.log('Full announcement object:', announcement);
+    
+    if (!creatorEmail) {
+      setError('Contact information not available');
+      return;
+    }
+
+    const subject = `Inquiry about: ${announcement.title}`;
+    const body = `Hello,\n\nI'm interested in your announcement: "${announcement.title}"\n\nPlease provide more information about this opportunity.\n\nBest regards,\n[Your Name]`;
+    
+    const mailtoLink = `mailto:${creatorEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    console.log('Mailto link:', mailtoLink);
+    window.open(mailtoLink, '_blank');
+  };
+
   useEffect(() => {
     fetchAnnouncements();
   }, []);
@@ -255,13 +275,23 @@ export default function StudentAnnouncements() {
                         </a>
                       )}
                       
-                      <button 
-                        className={`apply-btn ${isRegistered ? 'applied' : ''}`}
-                        onClick={() => handleApply(announcement.id)}
-                        disabled={isExpired || isRegistered}
-                      >
-                        {isRegistered ? 'Applied ✓' : 'Apply Now'}
-                      </button>
+                      <div className="announcement-actions">
+                        <button 
+                          className={`apply-btn ${isRegistered ? 'applied' : ''}`}
+                          onClick={() => handleApply(announcement.id)}
+                          disabled={isExpired || isRegistered}
+                        >
+                          {isRegistered ? 'Applied ✓' : 'Apply Now'}
+                        </button>
+                        
+                        <button 
+                          className="contact-btn"
+                          onClick={() => handleContact(announcement)}
+                          disabled={isExpired}
+                        >
+                          Contact Creator
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
