@@ -91,7 +91,7 @@ export default function AnnouncementForm({ onClose }) {
 
       if (insertError) throw insertError;
 
-      alert('Announcement published successfully!');
+      
       onClose();
     } catch (err) {
       console.error('Submission Error:', err);

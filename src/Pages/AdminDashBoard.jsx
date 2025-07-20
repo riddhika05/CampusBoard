@@ -1,38 +1,3 @@
-// import React, { useState } from 'react';
-// import './AdminDashBoard.css';
-// import AnnouncementForm from './AnnouncementForm';
-// export default function AdminDashBoard() {
-//   const [form, setForm] = useState(false);
-
-//   const post_form = () => {
-//     setForm(true);
-//   };
-//   const close_form = () => {
-//     setForm(false);
-//   };
-
-//   return (
-//     <>
-//               <div className="admin-header"> 
-//           <ul>
-//             <li onClick={post_form}>
-//                 Post Announcements!
-//             </li>
-//           </ul>
-//         </div>
-//       {/* {form && <div className="post-modal-overlay"></div>} */}
-//       {form && 
-//       (<>
-//         <div className="announcement-modal-overlay"></div>
-//         <AnnouncementForm onClose={close_form} />
-//         </>
-//       )
-//       }
-            
-//     </>
-//   );
-// }
-
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import './AdminDashBoard.css';
@@ -100,30 +65,41 @@ export default function AdminDashBoard() {
         ) : announcements.length === 0 ? (
           <p>No announcements yet. Create your first one!</p>
         ) : (
-          announcements.map(announcement => (
-            <div key={announcement.id} className="announcement-card">
-              <h3>{announcement.title}</h3>
-              <div className="announcement-meta">
-                <span className="announcement-type">{announcement.type}</span>
-                <span className="announcement-date">
-                  {new Date(announcement.created_at).toLocaleDateString()}
-                </span>
-              </div>
-              <p>{announcement.description}</p>
-              
-              {announcement.last_date && (
-                <div className="announcement-deadline">
-                  Deadline: {new Date(announcement.last_date).toLocaleDateString()}
+          announcements.map(announcement => {
+            const lastDate = new Date(announcement.last_date);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const isExpired = lastDate < today;
+            
+            return (
+              <div key={announcement.id} className={`announcement-card ${isExpired ? 'expired' : ''}`}>
+                <h3>{announcement.title}</h3>
+                <div className="announcement-meta">
+                  <span className="announcement-type">{announcement.type}</span>
+                  <span className="announcement-date">
+                    {new Date(announcement.created_at).toLocaleDateString()}
+                  </span>
+                  {isExpired && (
+                    <span className="expired-badge">EXPIRED</span>
+                  )}
                 </div>
-              )}
-              
-              {announcement.video_url && (
-                <a href={announcement.video_url} target="_blank" rel="noopener noreferrer">
-                  View Video
-                </a>
-              )}
-            </div>
-          ))
+                <p>{announcement.description}</p>
+                
+                {announcement.last_date && (
+                  <div className={`announcement-deadline ${isExpired ? 'expired-deadline' : ''}`}>
+                    Deadline: {new Date(announcement.last_date).toLocaleDateString()}
+                    {isExpired && <span className="expired-text"> (Expired)</span>}
+                  </div>
+                )}
+                
+                {announcement.video_url && (
+                  <a href={announcement.video_url} target="_blank" rel="noopener noreferrer">
+                    View Video
+                  </a>
+                )}
+              </div>
+            );
+          })
         )}
       </div>
 
