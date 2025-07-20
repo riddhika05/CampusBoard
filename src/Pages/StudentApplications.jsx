@@ -60,10 +60,6 @@ export default function StudentApplications() {
 
   // Handle application withdrawal
   const handleWithdraw = async (registrationId) => {
-    if (!window.confirm('Are you sure you want to withdraw your application?')) {
-      return;
-    }
-
     try {
       const { error } = await supabase
         .from('registrations')

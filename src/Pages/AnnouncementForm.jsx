@@ -110,7 +110,6 @@ export default function AnnouncementForm({ onClose, editingAnnouncement }) {
 
       if (insertError) throw insertError;
 
-      alert(editingAnnouncement ? 'Announcement updated successfully!' : 'Announcement published successfully!');
       onClose();
     } catch (err) {
       console.error('Submission Error:', err);

@@ -80,10 +80,6 @@ export default function AdminDashBoard() {
   };
 
   const deleteAnnouncement = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this announcement?')) {
-      return;
-    }
-
     try {
       const { error } = await supabase
         .from('announcements')
