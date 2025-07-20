@@ -3,16 +3,15 @@ import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
 import './AnnouncementForm.css';
 
-export default function AnnouncementForm({ onClose }) {
+export default function AnnouncementForm({ onClose, editingAnnouncement }) {
   const [formData, setFormData] = useState({
-    postType: '',
-    title: '',
-    description: '',
-    lastDate: '',
-    duration: '',
-    webinarLink: '',
-    video: null,
-    photo: null
+    postType: editingAnnouncement?.type || '',
+    title: editingAnnouncement?.title || '',
+    description: editingAnnouncement?.description || '',
+    lastDate: editingAnnouncement?.last_date ? editingAnnouncement.last_date.split('T')[0] : '',
+    duration: editingAnnouncement?.duration || '',
+    webinarLink: editingAnnouncement?.webinar_link || '',
+    video: null
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -66,32 +65,49 @@ export default function AnnouncementForm({ onClose }) {
          throw new Error(userError?.message || 'User not authenticated');
        }
 
-      // 2. Upload files if they exist
-      const [videoUrl, photoUrl] = await Promise.all([
-        uploadFile(formData.video, 'videos'),
-        uploadFile(formData.photo, 'photos')
-      ]);
+             // 2. Upload video if it exists
+       const videoUrl = await uploadFile(formData.video, 'videos');
 
-      // 3. Insert announcement data with user reference
-      const { data, error: insertError } = await supabase
-        .from('announcements')
-        .insert({
-          user_id: user.id, // Add user reference
-          type: formData.postType,
-          title: formData.title,
-          description: formData.description,
-          last_date: formData.lastDate || null, // Handle empty date
-          duration: formData.duration,
-          webinar_link: formData.postType === 'webinar' ? formData.webinarLink : null,
-          video_url: videoUrl,
-          photo_url: photoUrl,
-          status: 'published'
-        })
-        .select();
+             // 3. Insert or update announcement data with user reference
+       let result;
+       if (editingAnnouncement) {
+         // Update existing announcement
+         result = await supabase
+           .from('announcements')
+           .update({
+             type: formData.postType,
+             title: formData.title,
+             description: formData.description,
+             last_date: formData.lastDate || null,
+             duration: formData.duration,
+             webinar_link: formData.postType === 'webinar' ? formData.webinarLink : null,
+             video_url: videoUrl || editingAnnouncement.video_url
+           })
+           .eq('id', editingAnnouncement.id)
+           .select();
+       } else {
+         // Insert new announcement
+         result = await supabase
+           .from('announcements')
+           .insert({
+             user_id: user.id,
+             type: formData.postType,
+             title: formData.title,
+             description: formData.description,
+             last_date: formData.lastDate || null,
+             duration: formData.duration,
+             webinar_link: formData.postType === 'webinar' ? formData.webinarLink : null,
+             video_url: videoUrl,
+             status: 'published'
+           })
+           .select();
+       }
+
+       const { data, error: insertError } = result;
 
       if (insertError) throw insertError;
 
-      
+      alert(editingAnnouncement ? 'Announcement updated successfully!' : 'Announcement published successfully!');
       onClose();
     } catch (err) {
       console.error('Submission Error:', err);
@@ -226,21 +242,7 @@ export default function AnnouncementForm({ onClose }) {
         </label>
       </div>
 
-      <div className="form-group">
-        <label>
-          Photo Upload (optional):
-          <input 
-            type="file" 
-            name="photo"
-            accept="image/*" 
-            onChange={handleFileChange} 
-            disabled={isLoading}
-          />
-          {formData.photo && (
-            <span className="file-info">{formData.photo.name}</span>
-          )}
-        </label>
-      </div>
+
 
       {error && (
         <div className="error-message">
@@ -257,10 +259,10 @@ export default function AnnouncementForm({ onClose }) {
           {isLoading ? (
             <>
               <span className="spinner"></span>
-              Publishing...
+              {editingAnnouncement ? 'Updating...' : 'Publishing...'}
             </>
           ) : (
-            'Submit Announcement'
+            editingAnnouncement ? 'Update Announcement' : 'Submit Announcement'
           )}
         </button>
       </div>

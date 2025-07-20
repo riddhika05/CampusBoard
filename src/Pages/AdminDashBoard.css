@@ -22,6 +22,7 @@
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: 1px;
+  /* text-align: center; */
 }
 
 .admin-header p {
@@ -404,6 +405,46 @@
 .expired-text {
   font-weight: 600;
   color: #dc2626;
+}
+
+/* Announcement Action Buttons */
+.announcement-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.edit-btn, .delete-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.edit-btn {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.edit-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
 }
 
 @keyframes pulse {

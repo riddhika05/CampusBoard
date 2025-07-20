@@ -5,6 +5,7 @@ import AnnouncementForm from './AnnouncementForm';
 
 export default function AdminDashBoard() {
   const [form, setForm] = useState(false);
+  const [editingAnnouncement, setEditingAnnouncement] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -41,10 +42,40 @@ export default function AdminDashBoard() {
   const post_form = () => setForm(true);
   const close_form = () => {
     setForm(false);
+    setEditingAnnouncement(null);
     fetchAnnouncements(); // Refresh list after form closes
   };
 
+  const editAnnouncement = (announcement) => {
+    setEditingAnnouncement(announcement);
+    setForm(true);
+  };
+
+  const deleteAnnouncement = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this announcement?')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('announcements')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      // Remove from local state
+      setAnnouncements(prev => prev.filter(announcement => announcement.id !== id));
+      alert('Announcement deleted successfully!');
+    } catch (err) {
+      console.error('Delete error:', err);
+      alert('Failed to delete announcement: ' + err.message);
+    }
+  };
+
   return (
+    <>
+  
     <div className="admin-dashboard-container">
       <div className="admin-header">
         <ul>
@@ -97,6 +128,21 @@ export default function AdminDashBoard() {
                     View Video
                   </a>
                 )}
+                
+                <div className="announcement-actions">
+                  <button 
+                    className="edit-btn"
+                    onClick={() => editAnnouncement(announcement)}
+                  >
+                    Edit
+                  </button>
+                  <button 
+                    className="delete-btn"
+                    onClick={() => deleteAnnouncement(announcement.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             );
           })
@@ -107,9 +153,13 @@ export default function AdminDashBoard() {
       {form && (
         <>
           <div className="announcement-modal-overlay" onClick={close_form}></div>
-          <AnnouncementForm onClose={close_form} />
+          <AnnouncementForm 
+            onClose={close_form} 
+            editingAnnouncement={editingAnnouncement}
+          />
         </>
       )}
     </div>
+    </>
   );
 }
