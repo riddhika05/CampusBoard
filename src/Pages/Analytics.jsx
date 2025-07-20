@@ -42,14 +42,14 @@ export default function Analytics() {
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
     return (
-      <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={12}>
+      <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={16}>
         {`${(percent * 100).toFixed(0)}%`}
       </text>
     );
   };
 
   return (
-    <div style={{ width: '100%', height: 400 }}>
+    <div style={{ width: '100%', height: 600 }}>
       <h2>Announcement Types</h2>
       <ResponsiveContainer>
         <PieChart>
@@ -59,7 +59,7 @@ export default function Analytics() {
             nameKey="name"
             cx="50%"
             cy="50%"
-            outerRadius={120}
+            outerRadius={200}
             label={renderCustomizedLabel}
           >
             {data.map((entry, index) => (

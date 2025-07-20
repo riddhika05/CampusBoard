@@ -24,60 +24,6 @@
   display: block;
 }
 
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 48px;
-  font-size: 2rem;
-  color: #6366F1;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(60,60,120,0.10);
-  transition: background 0.2s, transform 0.15s, color 0.2s;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.carousel-btn:hover {
-  background: #e0e7ff;
-  color: #06B6D4;
-  transform: translateY(-50%) scale(1.12);
-}
-.carousel-btn.prev {
-  left: 18px;
-}
-.carousel-btn.next {
-  right: 18px;
-}
-
-.carousel-dots {
-  text-align: center;
-  margin-top: 18px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 18px;
-}
-.carousel-dot {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #ccc;
-  margin: 0 6px;
-  transition: background 0.2s, transform 0.2s;
-}
-.carousel-dot.active {
-  background: #6366F1;
-  transform: scale(1.2);
-  box-shadow: 0 2px 8px #6366F155;
-}
-
 .carousel-image-wrapper {
   position: relative;
   width: 860px;
@@ -103,4 +49,63 @@
   text-shadow: 0 2px 8px rgba(0,0,0,0.18);
   pointer-events: none;
   user-select: none;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 48px;
+  font-size: 2rem;
+  color: #6366F1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(60,60,120,0.10);
+  transition: background 0.2s, transform 0.15s, color 0.2s;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-btn:hover {
+  background: #e0e7ff;
+  color: #06B6D4;
+  transform: translateY(-50%) scale(1.12);
+}
+
+.carousel-btn.prev {
+  left: 18px;
+}
+
+.carousel-btn.next {
+  right: 18px;
+}
+
+.carousel-dots {
+  text-align: center;
+  margin-top: 18px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+}
+
+.carousel-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ccc;
+  margin: 0 6px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.carousel-dot.active {
+  background: #6366F1;
+  transform: scale(1.2);
+  box-shadow: 0 2px 8px #6366F155;
 } 

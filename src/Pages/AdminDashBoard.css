@@ -57,7 +57,6 @@
   transform: translateY(-1px);
 }
 
-
 .Post {
   margin-top: 120px;
   margin-left: auto;
@@ -238,7 +237,7 @@
 .Post select:focus {
   border: 1.5px solid #6366F1;
   outline: none;
-} 
+}
 
 /* Admin Dashboard Container */
 .admin-dashboard-container {
@@ -507,7 +506,7 @@
     padding: 1rem;
     margin-top: calc(20vh + 1rem);
   }
-  
+
   .announcements-list h2 {
     font-size: 1.5rem;
   }
@@ -517,16 +516,16 @@
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .announcement-card {
     padding: 1rem;
   }
-  
+
   .announcement-meta {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .announcement-card h3 {
     font-size: 1.2rem;
   }
